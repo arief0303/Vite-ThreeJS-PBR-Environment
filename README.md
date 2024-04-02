@@ -20,7 +20,7 @@
 [opera-icon]: https://github.com/alrra/browser-logos/blob/main/src/opera/opera_64x64.png
 [safari-icon]: https://github.com/alrra/browser-logos/blob/main/src/safari/safari_64x64.png
 
-# Vite Three JS — Template
+# Vite ThreeJS PBR Environment
 
 This boilerplate starter template is the ultimate solution to help you getting started on your project in no time, without the hassle of setting up and configuring your environment from scratch each time you start developing. <br />
 It's ideal for front-end engineers who want to build modern, fast and reliable **webgl** web applications with the latest cutting edge technologies such as **Three.JS**, **GLSL**, **JavaScript**, **TailwindCSS**, **Vite**, **ESLint**, **Prettier**, **Husky** and much more!

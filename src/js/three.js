@@ -122,7 +122,7 @@ export default class Three {
   LoadGLTFModel() {
     this.loader = new GLTFLoader();
     this.loader.load(
-      'public/assets/gltf/bunny.gltf',
+      'https://vazxmixjsiawhamofees.supabase.co/storage/v1/object/public/models/bunny/model.gltf',
       (gltf) => {
         // Adjust the model position
         gltf.scene.position.set(1, -0.5, 0); // Adjust these values as needed

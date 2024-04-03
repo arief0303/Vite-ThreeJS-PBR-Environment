@@ -43,6 +43,9 @@ export default class Three {
     this.controls.dampingFactor = 0.025; // This value could be adjusted to your liking
     this.controls.minPolarAngle = 0; // radians
     this.controls.maxPolarAngle = Math.PI / 2; // radians
+    this.controls.minDistance = 3; // Minimum distance the camera can zoom in
+    this.controls.maxDistance = 10; // Maximum distance the camera can zoom out
+    this.controls.enablePan = false; // Disable panning
 
     this.clock = new THREE.Clock();
     this.raycaster = new THREE.Raycaster();

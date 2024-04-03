@@ -158,9 +158,13 @@ export default class Three {
   }
 
   hideLoadingIndicator() {
-    // Hide the loading indicator
-    // This will depend on how you want to implement the loading indicator
-    document.body.removeChild(this.loadingIndicator);
+    // Add the 'fade-out' class to the loading indicator
+    this.loadingIndicator.classList.add('fade-out');
+
+    // Wait for the transition to finish before removing the loading indicator
+    setTimeout(() => {
+      document.body.removeChild(this.loadingIndicator);
+    }, 1000); // The timeout should be the same as the transition duration
   }
 
   loadGLTFModel() {

@@ -9,9 +9,9 @@
   --primary: #262626; /* neutral-800 */
   --secondary: #171717; /* neutral-900 */
   --tertiary: #404040; /* neutral-700 */
-  --color: #f3f3f3;
-  --accent-primary: #9d5bff;
-  --accent-primary-state: #1d4ed8; /* blue-700 */
+  --color: #F3F3F3;
+  --accent-primary: #2FA1D6;
+  --accent-primary-state: #1D4ED8; /* blue-700 */
 }
 
 html,
@@ -46,4 +46,9 @@ body {
   .github-corner .octo-arm {
     animation: octocat-wave 560ms ease-in-out;
   }
+}
+
+.fade-out {
+  opacity: 0;
+  transition: opacity 1s ease-out;
 }

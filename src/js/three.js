@@ -4,6 +4,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import fragment from '../shaders/fragment.glsl';
 import vertex from '../shaders/vertex.glsl';
+import * as dat from 'dat.gui';
 
 const device = {
   width: window.innerWidth,
@@ -51,17 +52,22 @@ export default class Three {
     this.raycaster = new THREE.Raycaster();
     this.mouse = new THREE.Vector2();
 
+    
+    
     this.setLights();
     this.setGeometry();
     this.LoadGLTFModel();
+    this.gui = new dat.GUI();
+    // Add a folder for the sun light parameters
+    const sunLightFolder = this.gui.addFolder('Sun Light');
+    sunLightFolder.add(this.sunLight.shadow, 'radius', 0, 100).step(0.1).name('Radius');
+    sunLightFolder.open();
     this.render();
     this.setResize();
   }
 
   setLights() {
     const shadowQualityMultiplier = 4;
-    /* this.ambientLight = new THREE.AmbientLight(new THREE.Color(1, 1, 1, 1));
-    this.scene.add(this.ambientLight); */
 
     this.sunLight = new THREE.DirectionalLight(0xffffff, 1); // white color, full intensity
     this.sunLight.position.set(15, 50, 30);
@@ -70,6 +76,9 @@ export default class Three {
     // Increase the shadow map size
     this.sunLight.shadow.mapSize.width = 1024 * shadowQualityMultiplier; // default is 512
     this.sunLight.shadow.mapSize.height = 1024 * shadowQualityMultiplier; // default is 512
+
+    // Adjust the shadow bias and radius (optional)
+    this.sunLight.shadow.radius = 30; // Adjust this value as needed
 
     // Adjust the shadow camera (optional)
     this.sunLight.shadow.camera.near = 0.5; // default

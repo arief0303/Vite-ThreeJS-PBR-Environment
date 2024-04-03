@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "@vitejs/plugin-legacy": "^5.3.2",
+    "dat.gui": "^0.7.9",
     "three": "^0.163.0"
   },
   "devDependencies": {

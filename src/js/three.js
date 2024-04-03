@@ -2,15 +2,16 @@ import * as THREE from 'three';
 // eslint-disable-next-line import/no-unresolved
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-
 import fragment from '../shaders/fragment.glsl';
 import vertex from '../shaders/vertex.glsl';
 
 const device = {
   width: window.innerWidth,
-  height: window.innerHeight-1,
+  height: window.innerHeight - 1,
   pixelRatio: window.devicePixelRatio
 };
+
+const bunnyModelUrl = 'assets/gltf/bunny.gltf';
 
 export default class Three {
   constructor(canvas) {
@@ -49,7 +50,7 @@ export default class Three {
 
     this.setLights();
     this.setGeometry();
-    this.LoadGLTFModel()
+    this.LoadGLTFModel();
     this.render();
     this.setResize();
   }
@@ -90,6 +91,22 @@ export default class Three {
     this.sphereMesh = new THREE.Mesh(this.sphereGeometry, this.sphereMaterial);
     this.scene.add(this.sphereMesh); */
 
+    this.planeGeometry = new THREE.PlaneGeometry(1, 1, 128, 128);
+    this.planeMaterial = new THREE.ShaderMaterial({
+      side: THREE.DoubleSide,
+      wireframe: true,
+      fragmentShader: fragment,
+      vertexShader: vertex,
+      uniforms: {
+        progress: { type: 'f', value: 0 }
+      }
+    });
+
+    this.planeMesh = new THREE.Mesh(this.planeGeometry, this.planeMaterial);
+    this.planeMesh.position.set(0, 0.5, 2);
+    this.planeMesh.castShadow = true;
+    this.scene.add(this.planeMesh);
+
     this.boxGeometry = new THREE.BoxGeometry(1, 1, 1);
     this.boxMaterial = new THREE.MeshPhysicalMaterial({ color: 0xffffff });
     this.boxMesh = new THREE.Mesh(this.boxGeometry, this.boxMaterial);
@@ -97,13 +114,13 @@ export default class Three {
     this.boxMesh.position.set(-1, 0, 0);
     this.scene.add(this.boxMesh);
 
-    this.planeGeometry = new THREE.PlaneGeometry(10000, 10000);
-    this.planeMaterial = new THREE.MeshPhysicalMaterial({ color: 0xffffff });
-    this.planeMesh = new THREE.Mesh(this.planeGeometry, this.planeMaterial);
-    this.planeMesh.receiveShadow = true; // enable shadow receiving
-    this.planeMesh.position.y = -0.5; // Set the plane at the bottom of the scene
-    this.planeMesh.rotation.x = -Math.PI / 2; // Rotate the plane to be horizontal
-    this.scene.add(this.planeMesh);
+    this.floorGeometry = new THREE.PlaneGeometry(10000, 10000);
+    this.floorMaterial = new THREE.MeshPhysicalMaterial({ color: 0xffffff });
+    this.floorMesh = new THREE.Mesh(this.floorGeometry, this.floorMaterial);
+    this.floorMesh.receiveShadow = true; // enable shadow receiving
+    this.floorMesh.position.y = -0.5; // Set the plane at the bottom of the scene
+    this.floorMesh.rotation.x = -Math.PI / 2; // Rotate the plane to be horizontal
+    this.scene.add(this.floorMesh);
 
     // Create a white material
     const skyboxMaterial = new THREE.MeshPhysicalMaterial({
@@ -122,7 +139,7 @@ export default class Three {
   LoadGLTFModel() {
     this.loader = new GLTFLoader();
     this.loader.load(
-      'https://vazxmixjsiawhamofees.supabase.co/storage/v1/object/public/models/bunny/model.gltf',
+      bunnyModelUrl,
       (gltf) => {
         // Adjust the model position
         gltf.scene.position.set(1, -0.5, 0); // Adjust these values as needed
@@ -146,8 +163,8 @@ export default class Three {
   render() {
     const elapsedTime = this.clock.getElapsedTime();
 
-    // this.boxMesh.rotation.x = 0.2 * elapsedTime;
-    // this.boxMesh.rotation.y = 0.1 * elapsedTime;
+    this.planeMesh.rotation.x = 0.2 * elapsedTime;
+    this.planeMesh.rotation.y = 0.1 * elapsedTime;
 
     this.controls.update();
 
@@ -161,7 +178,7 @@ export default class Three {
 
   onResize() {
     device.width = window.innerWidth;
-    device.height = window.innerHeight-1;
+    device.height = window.innerHeight - 1;
 
     this.camera.aspect = device.width / device.height;
     this.camera.updateProjectionMatrix();

@@ -136,8 +136,66 @@ export default class Three {
     this.scene.add(skybox);
   }
 
+  showLoadingIndicator() {
+    // Create and show the loading indicator
+    this.loadingIndicator = document.createElement('div');
+    this.loadingIndicator.textContent = 'Loading...';
+  
+    // Set the CSS properties to make the loading indicator a full-screen modal
+    this.loadingIndicator.style.position = 'fixed';
+    this.loadingIndicator.style.top = '0';
+    this.loadingIndicator.style.left = '0';
+    this.loadingIndicator.style.width = '100%';
+    this.loadingIndicator.style.height = '100%';
+    this.loadingIndicator.style.backgroundColor = 'rgba(0, 0, 0, 0.5)'; // Semi-transparent black
+    this.loadingIndicator.style.color = 'white'; // White text
+    this.loadingIndicator.style.display = 'flex';
+    this.loadingIndicator.style.justifyContent = 'center';
+    this.loadingIndicator.style.alignItems = 'center';
+    this.loadingIndicator.style.zIndex = '9999'; // Maximum z-index
+  
+    document.body.appendChild(this.loadingIndicator);
+  }
+
+  updateLoadingIndicator(percentage) {
+    // Update the loading indicator with the current loading percentage
+    // This will depend on how you want to implement the loading indicator
+    this.loadingIndicator.textContent = 'Loading: ' + percentage.toFixed(2) + '%';
+  }
+
+  hideLoadingIndicator() {
+    // Hide the loading indicator
+    // This will depend on how you want to implement the loading indicator
+    document.body.removeChild(this.loadingIndicator);
+  }
+
   LoadGLTFModel() {
-    this.loader = new GLTFLoader();
+    const loadingManager = new THREE.LoadingManager();
+
+    // Show the loading indicator when the loading starts
+    loadingManager.onStart = () => {
+      this.showLoadingIndicator();
+    };
+
+    // Update the loading indicator when the loading progress changes
+    loadingManager.onProgress = (url, itemsLoaded, itemsTotal) => {
+      this.updateLoadingIndicator((itemsLoaded / itemsTotal) * 100);
+    };
+
+    // Hide the loading indicator when the loading finishes
+    loadingManager.onLoad = () => {
+      setTimeout(() => {
+        this.hideLoadingIndicator();
+        this.render();
+      }, 1000); // Delay of 5 seconds
+    };
+
+    // Show an error message when the loading fails
+    loadingManager.onError = (url) => {
+      console.error('There was an error loading ' + url);
+    };
+
+    this.loader = new GLTFLoader(loadingManager);
     this.loader.load(
       bunnyModelUrl,
       (gltf) => {
@@ -159,7 +217,6 @@ export default class Three {
       (error) => console.error(error)
     );
   }
-
   render() {
     const elapsedTime = this.clock.getElapsedTime();
 

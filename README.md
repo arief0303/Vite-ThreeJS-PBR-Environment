@@ -1,11 +1,11 @@
 [node]: https://nodejs.org/en
 [yarn]: https://yarnpkg.com
 [pnpm]: https://pnpm.io
-[demo]: https://vite-three-js.d1a.app
-[license]: https://github.com/doinel1a/vite-three-js/blob/main/LICENSE
-[code-of-conduct]: https://github.com/doinel1a/vite-three-js/blob/main/CODE_OF_CONDUCT.md
-[issues]: https://github.com/doinel1a/vite-three-js/issues
-[pulls]: https://github.com/doinel1a/vite-three-js/pulls
+[demo]: https://vite-three-js-pbr-environment.vercel.app/
+[license]: https://github.com/arief0303/Vite-ThreeJS-PBR-Environment/blob/main/LICENSE
+[code-of-conduct]: https://github.com/arief0303/Vite-ThreeJS-PBR-Environment/blob/main/CODE_OF_CONDUCT.md
+[issues]: https://github.com/arief0303/Vite-ThreeJS-PBR-Environment/issues
+[pulls]: https://github.com/arief0303/Vite-ThreeJS-PBR-Environment/pulls
 [browserslist]: https://browsersl.ist/#q=last+3+versions%2C%3E+0.2%25%2C+not+dead
 [graphviz]: https://www.graphviz.org/download
 [commitlint]: https://github.com/conventional-changelog/commitlint/#what-is-commitlint
@@ -53,7 +53,7 @@ It's ideal for front-end engineers who want to build modern, fast and reliable *
 - Get the repository:
   - click **"Use this template"** &nbsp; or &nbsp; **"Fork"** button <br /> alternately
   - **clone** the repository through your terminal: <br />
-    `git clone https://github.com/doinel1a/vite-three-js YOUR-PROJECT-NAME`;
+    `git clone https://github.com/arief0303/Vite-ThreeJS-PBR-Environment.git YOUR-PROJECT-NAME`;
 - Open your terminal or code editor to the path your project is located, and run:
   | | **NPM** | **PNPM** | **Yarn** |
   | ------------------------------------------------ | ----------------- | -------------- | -------------- |

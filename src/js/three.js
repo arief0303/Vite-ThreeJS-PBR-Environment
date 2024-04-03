@@ -8,18 +8,17 @@ import * as dat from 'dat.gui';
 
 const device = {
   width: window.innerWidth,
-  height: window.innerHeight - 1,
+  height: window.innerHeight - 1, //-1 to avoid scrollbars
   pixelRatio: window.devicePixelRatio
 };
 
-const bunnyModelUrl = 'assets/gltf/bunny.gltf';
+const modelUrl = 'assets/gltf/bunny.gltf';
 
 export default class Three {
   constructor(canvas) {
     this.canvas = canvas;
 
     this.scene = new THREE.Scene();
-
     this.scene.fog = new THREE.Fog(0xffffff, 0, 45);
 
     this.camera = new THREE.PerspectiveCamera(
@@ -37,9 +36,9 @@ export default class Three {
       antialias: true,
       preserveDrawingBuffer: true
     });
+    this.renderer.shadowMap.enabled = true; // enable shadows in the renderer
     this.renderer.setSize(device.width, device.height);
     this.renderer.setPixelRatio(Math.min(device.pixelRatio, 2));
-    this.renderer.shadowMap.enabled = true; // enable shadows in the renderer
 
     this.controls = new OrbitControls(this.camera, this.canvas);
     this.controls.enableDamping = true; // default is false
@@ -56,7 +55,7 @@ export default class Three {
 
     this.setLights();
     this.setGeometry();
-    this.LoadGLTFModel();
+    this.loadGLTFModel();
     this.devGUIParams();
     this.render();
     this.setResize();
@@ -86,19 +85,6 @@ export default class Three {
   }
 
   setGeometry() {
-    /* this.sphereGeometry = new THREE.SphereGeometry(1, 128, 128);
-    this.sphereMaterial = new THREE.ShaderMaterial({
-      side: THREE.DoubleSide,
-      wireframe: true,
-      fragmentShader: fragment,
-      vertexShader: vertex,
-      uniforms: {
-        progress: { type: 'f', value: 0 }
-      }
-    });
-    this.sphereMesh = new THREE.Mesh(this.sphereGeometry, this.sphereMaterial);
-    this.scene.add(this.sphereMesh); */
-
     this.planeGeometry = new THREE.PlaneGeometry(1, 1, 128, 128);
     this.planeMaterial = new THREE.ShaderMaterial({
       side: THREE.DoubleSide,
@@ -109,7 +95,6 @@ export default class Three {
         progress: { type: 'f', value: 0 }
       }
     });
-
     this.planeMesh = new THREE.Mesh(this.planeGeometry, this.planeMaterial);
     this.planeMesh.position.set(0, 0.5, 2);
     this.planeMesh.castShadow = true;
@@ -178,7 +163,7 @@ export default class Three {
     document.body.removeChild(this.loadingIndicator);
   }
 
-  LoadGLTFModel() {
+  loadGLTFModel() {
     const loadingManager = new THREE.LoadingManager();
 
     // Show the loading indicator when the loading starts
@@ -196,7 +181,7 @@ export default class Three {
       setTimeout(() => {
         this.hideLoadingIndicator();
         this.render();
-      }, 1000); // Delay of 5 seconds
+      }, 1000); // Delay of 1 sec
     };
 
     // Show an error message when the loading fails
@@ -206,7 +191,7 @@ export default class Three {
 
     this.loader = new GLTFLoader(loadingManager);
     this.loader.load(
-      bunnyModelUrl,
+      modelUrl,
       (gltf) => {
         // Adjust the model position
         gltf.scene.position.set(1, -0.5, 0); // Adjust these values as needed
@@ -258,7 +243,7 @@ export default class Three {
 
   onResize() {
     device.width = window.innerWidth;
-    device.height = window.innerHeight - 1;
+    device.height = window.innerHeight - 1; //-1 to avoid scrollbars
 
     this.camera.aspect = device.width / device.height;
     this.camera.updateProjectionMatrix();

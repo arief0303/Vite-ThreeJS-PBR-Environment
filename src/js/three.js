@@ -20,6 +20,8 @@ export default class Three {
 
     this.scene = new THREE.Scene();
 
+    this.scene.fog = new THREE.Fog(0xffffff, 0, 45);
+
     this.camera = new THREE.PerspectiveCamera(
       75,
       device.width / device.height,
@@ -52,16 +54,10 @@ export default class Three {
     this.raycaster = new THREE.Raycaster();
     this.mouse = new THREE.Vector2();
 
-    
-    
     this.setLights();
     this.setGeometry();
     this.LoadGLTFModel();
-    this.gui = new dat.GUI();
-    // Add a folder for the sun light parameters
-    const sunLightFolder = this.gui.addFolder('Sun Light');
-    sunLightFolder.add(this.sunLight.shadow, 'radius', 0, 100).step(0.1).name('Radius');
-    sunLightFolder.open();
+    this.devGUIParams();
     this.render();
     this.setResize();
   }
@@ -152,7 +148,7 @@ export default class Three {
     // Create and show the loading indicator
     this.loadingIndicator = document.createElement('div');
     this.loadingIndicator.textContent = 'Loading...';
-  
+
     // Set the CSS properties to make the loading indicator a full-screen modal
     this.loadingIndicator.style.position = 'fixed';
     this.loadingIndicator.style.top = '0';
@@ -165,14 +161,15 @@ export default class Three {
     this.loadingIndicator.style.justifyContent = 'center';
     this.loadingIndicator.style.alignItems = 'center';
     this.loadingIndicator.style.zIndex = '9999'; // Maximum z-index
-  
+
     document.body.appendChild(this.loadingIndicator);
   }
 
   updateLoadingIndicator(percentage) {
     // Update the loading indicator with the current loading percentage
     // This will depend on how you want to implement the loading indicator
-    this.loadingIndicator.textContent = 'Loading: ' + percentage.toFixed(2) + '%';
+    this.loadingIndicator.textContent =
+      'Loading: ' + percentage.toFixed(2) + '%';
   }
 
   hideLoadingIndicator() {
@@ -229,6 +226,20 @@ export default class Three {
       (error) => console.error(error)
     );
   }
+
+  devGUIParams() {
+    this.gui = new dat.GUI();
+    const sunLightFolder = this.gui.addFolder('Sun Light');
+    sunLightFolder
+      .add(this.sunLight.shadow, 'radius', 0, 100)
+      .step(0.1)
+      .name('Radius');
+    sunLightFolder.open();
+    const fogFolder = this.gui.addFolder('Fog');
+    fogFolder.add(this.scene.fog, 'far', 5, 250).step(1).name('Far');
+    fogFolder.open();
+  }
+
   render() {
     const elapsedTime = this.clock.getElapsedTime();
 

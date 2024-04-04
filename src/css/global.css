@@ -60,3 +60,24 @@ body {
 .dg.main.a{
   margin: 0 !important;
 }
+
+.btn {
+  font-family: inherit;
+  font-size: inherit;
+  background: none;
+  cursor: pointer;
+  padding: 2px 10px;
+  outline: none;
+  border-radius: 50px;
+  border: 2px solid #fff;
+  color: #fff;
+  transition: all 0.3s;
+  margin: 5px;
+}
+
+.btn:hover,
+.btn:active {
+    color: #000;
+    background: #fff;
+    border-color: #fff;
+}

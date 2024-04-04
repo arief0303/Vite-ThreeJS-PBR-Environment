@@ -13,7 +13,7 @@ const device = {
 };
 
 const modelUrl = 'assets/gltf/bunny.gltf';
-const albedoMap =  new THREE.TextureLoader().load('assets/textures/Albedo.jpg'); 
+const albedoMap = new THREE.TextureLoader().load('assets/textures/Albedo.jpg');
 
 export default class Three {
   constructor(canvas) {
@@ -88,7 +88,7 @@ export default class Three {
   }
 
   setGeometry() {
-    this.planeGeometry = new THREE.PlaneGeometry(1, 1, 128/8, 128/8);
+    this.planeGeometry = new THREE.PlaneGeometry(1, 1, 128 / 8, 128 / 8);
     this.planeMaterial = new THREE.ShaderMaterial({
       side: THREE.DoubleSide,
       wireframe: true,
@@ -103,13 +103,9 @@ export default class Three {
     this.planeMesh.castShadow = true;
     this.scene.add(this.planeMesh);
 
-    this.earthGeometry = new THREE.SphereGeometry(
-      0.75,
-      128,
-      128,
-    );
+    this.earthGeometry = new THREE.SphereGeometry(0.75, 128, 128);
     this.earthMaterial = new THREE.MeshStandardMaterial({
-      map: albedoMap,
+      map: albedoMap
     });
     this.earthMesh = new THREE.Mesh(this.earthGeometry, this.earthMaterial);
     this.earthMesh.castShadow = true;
@@ -246,11 +242,26 @@ export default class Three {
   }
 
   raycasterListener() {
-    window.addEventListener('click', this.onMouseClickAddMarker.bind(this), false);
+    window.addEventListener(
+      'click',
+      this.onMouseClickAddMarker.bind(this),
+      false
+    );
+    window.addEventListener(
+      'touchstart',
+      this.onMouseClickAddMarker.bind(this),
+      false
+    );
   }
 
   onMouseClickAddMarker(event) {
     event.preventDefault();
+
+    // Check if event is a touch event
+    if (event.changedTouches) {
+      event.clientX = event.changedTouches[0].clientX;
+      event.clientY = event.changedTouches[0].clientY;
+    }
 
     this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
     this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
@@ -263,10 +274,12 @@ export default class Three {
       const markerGeometry = new THREE.SphereGeometry(0.05, 32, 32);
       const markerMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
       const marker = new THREE.Mesh(markerGeometry, markerMaterial);
-    
+
       // Convert the intersection point to the earthMesh's local coordinate system
-      marker.position.copy(this.earthMesh.worldToLocal(intersects[0].point.clone()));
-      
+      marker.position.copy(
+        this.earthMesh.worldToLocal(intersects[0].point.clone())
+      );
+
       // Add the marker as a child of the earthMesh
       this.earthMesh.add(marker);
     }
@@ -279,7 +292,7 @@ export default class Three {
     this.planeMesh.rotation.y = 0.1 * elapsedTime;
 
     this.earthMesh.rotation.y = 0.1 * elapsedTime;
-    
+
     this.controls.update();
 
     this.renderer.render(this.scene, this.camera);

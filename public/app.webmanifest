@@ -10,12 +10,12 @@
   "background_color": "#000",
   "icons": [
     {
-      "src": "/favicon/favicon-192.png",
+      "src": "/favicon/favicon.ico",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "/favicon/favicon-512.png",
+      "src": "/favicon/favicon.ico",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"

@@ -17,7 +17,7 @@ const albedoMap = new THREE.TextureLoader().load('assets/textures/Albedo.jpg');
 
 export default class Three {
   constructor(canvas) {
-    this.canvas = canvas;
+    this.canvas = document.querySelector('#canvas');
 
     this.scene = new THREE.Scene();
     this.scene.fog = new THREE.Fog(0xffffff, 0, 45);
@@ -242,17 +242,17 @@ export default class Three {
   }
 
   raycasterListener() {
-    window.addEventListener(
+    this.canvas.addEventListener(
       'click',
       this.onMouseClickAddMarker.bind(this),
       false
     );
-    window.addEventListener(
+    this.canvas.addEventListener(
       'touchstart',
       this.onMouseClickAddMarker.bind(this),
       false
     );
-  }
+}
 
   onMouseClickAddMarker(event) {
     event.preventDefault();

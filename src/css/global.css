@@ -52,3 +52,11 @@ body {
   opacity: 0;
   transition: opacity 1s ease-out;
 }
+
+.dg.ac{
+  top: 18vh !important;
+}
+
+.dg.main.a{
+  margin: 0 !important;
+}

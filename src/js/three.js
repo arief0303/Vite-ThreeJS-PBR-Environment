@@ -2,8 +2,8 @@ import * as THREE from 'three';
 // eslint-disable-next-line import/no-unresolved
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import fragment from '../shaders/fragment.glsl';
-import vertex from '../shaders/vertex.glsl';
+import fragment_basic from '../shaders/fragment_basic.glsl';
+import vertex_basic from '../shaders/vertex_basic.glsl';
 import * as dat from 'dat.gui';
 
 const device = {
@@ -13,6 +13,7 @@ const device = {
 };
 
 const modelUrl = 'assets/gltf/bunny.gltf';
+const albedoMap =  new THREE.TextureLoader().load('assets/textures/Albedo.jpg'); 
 
 export default class Three {
   constructor(canvas) {
@@ -48,6 +49,7 @@ export default class Three {
     this.controls.minDistance = 3; // Minimum distance the camera can zoom in
     this.controls.maxDistance = 10; // Maximum distance the camera can zoom out
     this.controls.enablePan = false; // Disable panning
+    // this.controls.enableZoom = false; // Disable zooming with scroll wheel
 
     this.clock = new THREE.Clock();
     this.raycaster = new THREE.Raycaster();
@@ -58,6 +60,7 @@ export default class Three {
     this.loadGLTFModel();
     this.devGUIParams();
     this.render();
+    this.raycasterListener();
     this.setResize();
   }
 
@@ -85,12 +88,12 @@ export default class Three {
   }
 
   setGeometry() {
-    this.planeGeometry = new THREE.PlaneGeometry(1, 1, 128, 128);
+    this.planeGeometry = new THREE.PlaneGeometry(1, 1, 128/8, 128/8);
     this.planeMaterial = new THREE.ShaderMaterial({
       side: THREE.DoubleSide,
       wireframe: true,
-      fragmentShader: fragment,
-      vertexShader: vertex,
+      fragmentShader: fragment_basic,
+      vertexShader: vertex_basic,
       uniforms: {
         progress: { type: 'f', value: 0 }
       }
@@ -99,6 +102,19 @@ export default class Three {
     this.planeMesh.position.set(0, 0.5, 2);
     this.planeMesh.castShadow = true;
     this.scene.add(this.planeMesh);
+
+    this.earthGeometry = new THREE.SphereGeometry(
+      0.75,
+      128,
+      128,
+    );
+    this.earthMaterial = new THREE.MeshStandardMaterial({
+      map: albedoMap,
+    });
+    this.earthMesh = new THREE.Mesh(this.earthGeometry, this.earthMaterial);
+    this.earthMesh.castShadow = true;
+    this.earthMesh.position.set(-1, 1.5, 0);
+    this.scene.add(this.earthMesh);
 
     this.boxGeometry = new THREE.BoxGeometry(1, 1, 1);
     this.boxMaterial = new THREE.MeshPhysicalMaterial({ color: 0xffffff });
@@ -229,12 +245,41 @@ export default class Three {
     fogFolder.open();
   }
 
+  raycasterListener() {
+    window.addEventListener('click', this.onMouseClickAddMarker.bind(this), false);
+  }
+
+  onMouseClickAddMarker(event) {
+    event.preventDefault();
+
+    this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+    this.raycaster.setFromCamera(this.mouse, this.camera);
+
+    const intersects = this.raycaster.intersectObjects([this.earthMesh]);
+
+    if (intersects.length > 0) {
+      const markerGeometry = new THREE.SphereGeometry(0.05, 32, 32);
+      const markerMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+      const marker = new THREE.Mesh(markerGeometry, markerMaterial);
+    
+      // Convert the intersection point to the earthMesh's local coordinate system
+      marker.position.copy(this.earthMesh.worldToLocal(intersects[0].point.clone()));
+      
+      // Add the marker as a child of the earthMesh
+      this.earthMesh.add(marker);
+    }
+  }
+
   render() {
     const elapsedTime = this.clock.getElapsedTime();
 
     this.planeMesh.rotation.x = 0.2 * elapsedTime;
     this.planeMesh.rotation.y = 0.1 * elapsedTime;
 
+    this.earthMesh.rotation.y = 0.1 * elapsedTime;
+    
     this.controls.update();
 
     this.renderer.render(this.scene, this.camera);
